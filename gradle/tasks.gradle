@@ -1,0 +1,42 @@
+def getProp(String key, String defaultValue = '') {
+    return project.hasProperty(key) ? project.property(key) : defaultValue
+}
+
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            minecraft_version: getProp('minecraft_version', '1.20.1'),
+            minecraft_version_range: getProp('minecraft_version_range', ''),
+            forge_version: getProp('forge_version', '47.2.0'),
+            forge_version_range: getProp('forge_version_range', ''),
+            loader_version_range: getProp('loader_version_range', ''),
+            mod_id: getProp('mod_id', 'default_mod_id'),
+            mod_name: getProp('mod_name', 'DefaultModName'),
+            mod_license: getProp('mod_license', 'MIT'),
+            mod_version: getProp('mod_version', '0.0.1'),
+            mod_authors: getProp('mod_authors', 'Author'),
+            mod_description: getProp('mod_description', 'Description'),
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
+tasks.named('jar', Jar).configure {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_id,
+                'Specification-Vendor'    : mod_authors,
+                'Specification-Version'   : '1',
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : archiveVersion,
+                'Implementation-Vendor'   : mod_authors,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}

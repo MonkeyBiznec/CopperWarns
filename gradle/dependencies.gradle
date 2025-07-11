@@ -1,0 +1,14 @@
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${property('minecraft_version')}-${property('forge_version')}"
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    implementation 'com.google.guava:guava:32.1.2-jre'
+    compileOnly(project(":processor"))
+    runtimeOnly(project(":processor"))
+    annotationProcessor(project(":processor"))
+}

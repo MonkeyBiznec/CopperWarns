@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+group = 'github.monkeybiznec.copperwarn'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,12 @@
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url = uri("file://${project.projectDir}/mcmodsrepo")
+        }
+    }
+}

@@ -1,0 +1,52 @@
+minecraft {
+    mappings channel: property('mapping_channel'), version: property('mapping_version')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    copyIdeResources = true
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                warns {
+                    source sourceSets.main
+                }
+            }
+        }
+        client {
+            properties 'mixin.env.remapRefMap': 'true'
+            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                warns {
+                    source sourceSets.main
+                }
+            }
+            property 'forge.enabledGameTestNamespaces', property('mod_id')
+        }
+        server {
+            property 'forge.enabledGameTestNamespaces', property('mod_id')
+            args '--nogui'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                warns {
+                    source sourceSets.main
+                }
+            }
+        }
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', property('mod_id')
+            mods {
+                warns {
+                    source sourceSets.main
+                }
+            }
+        }
+        data {
+            workingDirectory project.file('run-data')
+            args '--mod', property('mod_id'), '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
+    }
+}
